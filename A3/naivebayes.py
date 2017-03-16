@@ -14,6 +14,7 @@ from scipy.ndimage import filters
 import urllib
 import string
 import operator
+import math
 
 #define global variables
 
@@ -57,7 +58,6 @@ def load_data():
         text = text.read()
         text = text.lower()
         text = text.translate(None, string.punctuation)
-        pos_reviews_train.append(text)
         if i <= 600:
             pos_reviews_train.append(text)
         elif i<=800:
@@ -83,9 +83,9 @@ def collect_keywords():
             if word not in keyword_range:
                 keyword_range[word] = count
                 count += 1
-
+    dict_keyword_range = keyword_range
     keyword_range = sorted(keyword_range.items(), key = operator.itemgetter(1))
-    return count
+    return dict_keyword_range , count
 
 def count_occurrence(count):
     global keyword_range
@@ -117,21 +117,63 @@ def calculate_prob(m,k):
     global pos_reviews_train
 
     count_data = np.load('count_data.npy')
-    print(count_data)
+
+
+    # print(count_data)
+    # print(sum(count_data[:,0]))
+    # print(sum(count_data[:,1]))
+
+
     count_data += m*k
-    count_data[:,0] = count_data[:,0]/(len(neg_reviews_train)+k)
-    count_data[:,1] = count_data[:,1] / (len(pos_reviews_train) + k)
-
-    print(count_data)
+    count_data[:,0] = count_data[:,0]/(600+k)
+    count_data[:,1] = count_data[:,1] / (600 + k)
 
 
+    return count_data
 
-load_data()
-count = collect_keywords()
-# count_occurrence(count)
-calculate_prob(2,0.01)
+def argmax_class(count_data,review,keyword_range):
+    sum_pos = 0.0
+    sum_neg = 0.0
+    keywords = review.split()
+    for keyword in keywords:
+        sum_neg+=math.log(count_data[keyword_range[keyword],0])
+        sum_pos+=math.log(count_data[keyword_range[keyword],1])
+    #print(sum_pos,sum_neg)
+    if sum_pos > sum_neg-10:
+        return 1
+    else:
+        return 0
+
+def part2():
+    global neg_reviews_train
+    global pos_reviews_train
+    global neg_reviews_valid
+    global pos_reviews_valid
+    global neg_reviews_test
+    global pos_reviews_test
+    load_data()
+    dict_keyword_range, count = collect_keywords()
+    #count_occurrence(count)
+    for m in range(2,50):
+        accuracy_pos = 0
+        accuracy_neg = 0
+        count_data = calculate_prob(m, 0.01)
+        for review in neg_reviews_valid:
+            if argmax_class(count_data,review,dict_keyword_range) == 0:
+                accuracy_neg += 1
+        for review in pos_reviews_valid:
+            if argmax_class(count_data, review,dict_keyword_range) == 1:
+                accuracy_pos += 1
+        accuracy_neg = accuracy_neg/200.0
+        accuracy_pos = accuracy_pos/200.0
+        print((accuracy_neg,accuracy_pos))
 
 
+
+
+
+
+part2()
 
 
 
