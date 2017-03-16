@@ -12,38 +12,62 @@ from matplotlib import cm
 import os
 from scipy.ndimage import filters
 import urllib
+import string
 
 #define global variables
 k = 1
 m = 2
 
-neg_reviews = []
-pos_reviews = []
+neg_reviews_train = []
+pos_reviews_train = []
+neg_reviews_valid = []
+pos_reviews_valid = []
+neg_reviews_test = []
+pos_reviews_test = []
 
 keywords_range = ["no originality","doesn't matter","does not make for", 'clueless']
 keyword_freq_neg = {}
 keyword_freq_pos = {}
 
+i = 0
 for filename in os.listdir("txt_sentoken/neg/"):
     text = open("txt_sentoken/neg/"+filename, "r")
     text = text.read()
-    neg_reviews.append(text)
+    text = text.lower()
+    text = text.translate(None, string.punctuation)
+    if i <= 600:
+        neg_reviews_train.append(text)
+    elif i<=800:
+        neg_reviews_valid.append(text)
+    else:
+        neg_reviews_test.append(text)
+    i += 1
 
+i = 0
 for filename in os.listdir("txt_sentoken/pos/"):
     text = open("txt_sentoken/pos/"+filename, "r")
     text = text.read()
-    pos_reviews.append(text)
+    text = text.lower()
+    text = text.translate(None, string.punctuation)
+    pos_reviews_train.append(text)
+    if i <= 600:
+        pos_reviews_train.append(text)
+    elif i<=800:
+        pos_reviews_valid.append(text)
+    else:
+        pos_reviews_test.append(text)
+    i += 1
 
 
 for keyword in keywords_range:
     keyword_freq_neg[keyword] = 0
     keyword_freq_pos[keyword] = 0
 
-    for review in neg_reviews:
+    for review in neg_reviews_train:
         if review.find(keyword) != -1:
             keyword_freq_neg[keyword] += 1
 
-    for review in pos_reviews:
+    for review in pos_reviews_train:
         if review.find(keyword) != -1:
             keyword_freq_pos[keyword] += 1
 
