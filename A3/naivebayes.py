@@ -16,8 +16,6 @@ import string
 import operator
 
 #define global variables
-k = 1
-m = 2
 
 neg_reviews_train = []
 pos_reviews_train = []
@@ -114,9 +112,24 @@ def count_occurrence(count):
 
     np.save('count_data',keywords_count)
 
+def calculate_prob(m,k):
+    global neg_reviews_train
+    global pos_reviews_train
+
+    count_data = np.load('count_data.npy')
+    print(count_data)
+    count_data += m*k
+    count_data[:,0] = count_data[:,0]/(len(neg_reviews_train)+k)
+    count_data[:,1] = count_data[:,1] / (len(pos_reviews_train) + k)
+
+    print(count_data)
+
+
+
 load_data()
 count = collect_keywords()
-count_occurrence(count)
+# count_occurrence(count)
+calculate_prob(2,0.01)
 
 
 
