@@ -13,12 +13,16 @@ import os
 from scipy.ndimage import filters
 import urllib
 
-# text = open("txt_sentoken/neg/cv000_29416.txt","r")
-# text = text.read()
-# print text
+#define global variables
+k = 1
+m = 2
 
 neg_reviews = []
 pos_reviews = []
+
+keywords_range = ["no originality","doesn't matter","does not make for", 'clueless']
+keyword_freq_neg = {}
+keyword_freq_pos = {}
 
 for filename in os.listdir("txt_sentoken/neg/"):
     text = open("txt_sentoken/neg/"+filename, "r")
@@ -31,3 +35,25 @@ for filename in os.listdir("txt_sentoken/pos/"):
     pos_reviews.append(text)
 
 
+for keyword in keywords_range:
+    keyword_freq_neg[keyword] = 0
+    keyword_freq_pos[keyword] = 0
+
+    for review in neg_reviews:
+        if review.find(keyword) != -1:
+            keyword_freq_neg[keyword] += 1
+
+    for review in pos_reviews:
+        if review.find(keyword) != -1:
+            keyword_freq_pos[keyword] += 1
+
+
+for key in keyword_freq_neg:
+    keyword_freq_neg[key] += m*k
+    keyword_freq_neg[key] = keyword_freq_neg[key] #should be divided by 1000, but will underflow happen
+
+for key in keyword_freq_pos:
+    keyword_freq_pos[key] += m*k
+    keyword_freq_pos[key] = keyword_freq_pos[key]
+
+print(keyword_freq_neg)
