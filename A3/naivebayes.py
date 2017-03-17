@@ -143,7 +143,7 @@ def part2():
     # print neg_reviews_train
     dict_keyword_range, count = collect_keywords()
     print count
-    # count_occurrence(count)
+    #count_occurrence(count)
     count_data = np.load('count_data.npy')
     m = 0.001
     k = 0.009
@@ -373,6 +373,6 @@ def part5():
     # result_args = [ for i in temp[:100]]
 
 
-# part2()
-generate_and_save_sets()
-part4()
+part2()
+#generate_and_save_sets()
+#part4()
