@@ -177,7 +177,7 @@ def part2():
     accuracy_neg = np.sum(np.logical_and(prediction[0:100, :], Y[0:100, :]))
     accuracy_neg = accuracy_neg / 100.0
     accuracy_pos = accuracy_pos / 100.0
-    print('Test set accuracy: pos: {}, neg: {}, overall: {}'.format(accuracy_pos, accuracy_neg,
+    print('Validation set accuracy: pos: {}, neg: {}, overall: {}'.format(accuracy_pos, accuracy_neg,
                                                                     (accuracy_neg + accuracy_pos) / 2))
 
     X = np.zeros((200, 2))
@@ -204,7 +204,7 @@ def part2():
     accuracy_neg = np.sum(np.logical_and(prediction[0:100, :], Y[0:100, :]))
     accuracy_neg = accuracy_neg / 100.0
     accuracy_pos = accuracy_pos / 100.0
-    print('Validation set accuracy: pos: {}, neg: {}, overall: {}'.format(accuracy_pos, accuracy_neg,
+    print('Test set accuracy: pos: {}, neg: {}, overall: {}'.format(accuracy_pos, accuracy_neg,
                                                                           (accuracy_neg + accuracy_pos) / 2))
     return dict_keyword_range, count_data_
 
@@ -372,7 +372,33 @@ def part5():
     # temp = np.argpartition(-theta_bayes, 100)
     # result_args = [ for i in temp[:100]]
 
+def part3():
+    global neg_reviews_train
+    global pos_reviews_train
+    global neg_reviews_valid
+    global pos_reviews_valid
+    global neg_reviews_test
+    global pos_reviews_test
+    global keyword_range
+    load_data()
+    dict_keyword_range, count = collect_keywords()
 
-part2()
+    count_data = np.load('count_data.npy')
+    neg_ranking = {}
+    pos_ranking = {}
+    i = 0
+    for word in count_data:
+        neg_ranking[keyword_range[i][0]] = word[0]
+        pos_ranking[keyword_range[i][0]] = word[1]
+        i += 1
+    neg_ranking = sorted(neg_ranking.items(), key=operator.itemgetter(1))
+    pos_ranking = sorted(pos_ranking.items(), key=operator.itemgetter(1))
+    print(pos_ranking)
+
+
+
+
+#part2()
+part3()
 #generate_and_save_sets()
 #part4()
