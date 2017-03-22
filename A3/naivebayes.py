@@ -470,4 +470,4 @@ def part8():
 #generate_and_save_sets()
 #part4()
 #part6()
-#part8()
+part7()
