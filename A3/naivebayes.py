@@ -24,7 +24,7 @@ neg_reviews_train = []
 pos_reviews_train = []
 neg_reviews_valid = []
 pos_reviews_valid = []
-neg_reviews_test = []
+neg_reviews_test = []#this is good
 pos_reviews_test = []
 
 
