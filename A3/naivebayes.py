@@ -1,3 +1,5 @@
+#another kind of comment
+
 from pylab import *
 import numpy as np
 from numpy import linalg as la
